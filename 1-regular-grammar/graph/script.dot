@@ -1,0 +1,16 @@
+digraph FA {
+    
+    node [shape = doublecircle];
+    Q_final;
+
+    
+    node [shape = circle];
+
+   
+    S -> B [label = "a"];
+    B -> B [label = "b"];
+    B -> S [label = "c"];
+    B -> D [label = "a"];
+    D -> D [label = "a"];
+    D -> Q_final;
+}

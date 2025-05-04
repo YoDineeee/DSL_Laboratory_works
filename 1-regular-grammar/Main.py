@@ -3,7 +3,7 @@ from src.Grammar import Grammar
 from src.Finite_Automata import FiniteAutomata
 
 def main():
-    # Define Variant 1
+    #  Variant 13
     production = """
     S → aB
     B → aD

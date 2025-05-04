@@ -1,4 +1,4 @@
-# finite_automata.py
+
 from collections import defaultdict
 
 class FiniteAutomata:
