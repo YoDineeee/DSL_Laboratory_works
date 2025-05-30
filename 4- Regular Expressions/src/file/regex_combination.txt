@@ -773,3 +773,322 @@ Pattern: 1(0/1)*2(3/4)^5 36
 10/10/10/12(3/4)^5 36
 10/10/10/10/12(3/4)^5 36
 10/10/10/10/10/12(3/4)^5 36
+Pattern:  (a | b) (c | d) E+ G?
+ a  c  E 
+ a  c  E G
+ a  c  EE 
+ a  c  EE G
+ a  c  EEE 
+ a  c  EEE G
+ a  c  EEEE 
+ a  c  EEEE G
+ a  c  EEEEE 
+ a  c  EEEEE G
+ a   d E 
+ a   d E G
+ a   d EE 
+ a   d EE G
+ a   d EEE 
+ a   d EEE G
+ a   d EEEE 
+ a   d EEEE G
+ a   d EEEEE 
+ a   d EEEEE G
+  b c  E 
+  b c  E G
+  b c  EE 
+  b c  EE G
+  b c  EEE 
+  b c  EEE G
+  b c  EEEE 
+  b c  EEEE G
+  b c  EEEEE 
+  b c  EEEEE G
+  b  d E 
+  b  d E G
+  b  d EE 
+  b  d EE G
+  b  d EEE 
+  b  d EEE G
+  b  d EEEE 
+  b  d EEEE G
+  b  d EEEEE 
+  b  d EEEEE G
+Pattern: P(Q |R |S)T(UV |W |X) * Z+
+PQ TUV  Z
+PQ TUV  ZZ
+PQ TUV  ZZZ
+PQ TUV  ZZZZ
+PQ TUV  ZZZZZ
+PQ TUV   Z
+PQ TUV   ZZ
+PQ TUV   ZZZ
+PQ TUV   ZZZZ
+PQ TUV   ZZZZZ
+PQ TUV    Z
+PQ TUV    ZZ
+PQ TUV    ZZZ
+PQ TUV    ZZZZ
+PQ TUV    ZZZZZ
+PQ TUV     Z
+PQ TUV     ZZ
+PQ TUV     ZZZ
+PQ TUV     ZZZZ
+PQ TUV     ZZZZZ
+PQ TUV      Z
+PQ TUV      ZZ
+PQ TUV      ZZZ
+PQ TUV      ZZZZ
+PQ TUV      ZZZZZ
+PQ TUV       Z
+PQ TUV       ZZ
+PQ TUV       ZZZ
+PQ TUV       ZZZZ
+PQ TUV       ZZZZZ
+PQ TW  Z
+PQ TW  ZZ
+PQ TW  ZZZ
+PQ TW  ZZZZ
+PQ TW  ZZZZZ
+PQ TW   Z
+PQ TW   ZZ
+PQ TW   ZZZ
+PQ TW   ZZZZ
+PQ TW   ZZZZZ
+PQ TW    Z
+PQ TW    ZZ
+PQ TW    ZZZ
+PQ TW    ZZZZ
+PQ TW    ZZZZZ
+PQ TW     Z
+PQ TW     ZZ
+PQ TW     ZZZ
+PQ TW     ZZZZ
+PQ TW     ZZZZZ
+PQ TW      Z
+PQ TW      ZZ
+PQ TW      ZZZ
+PQ TW      ZZZZ
+PQ TW      ZZZZZ
+PQ TW       Z
+PQ TW       ZZ
+PQ TW       ZZZ
+PQ TW       ZZZZ
+PQ TW       ZZZZZ
+PQ TX Z
+PQ TX ZZ
+PQ TX ZZZ
+PQ TX ZZZZ
+PQ TX ZZZZZ
+PQ TX  Z
+PQ TX  ZZ
+PQ TX  ZZZ
+PQ TX  ZZZZ
+PQ TX  ZZZZZ
+PQ TX   Z
+PQ TX   ZZ
+PQ TX   ZZZ
+PQ TX   ZZZZ
+PQ TX   ZZZZZ
+PQ TX    Z
+PQ TX    ZZ
+PQ TX    ZZZ
+PQ TX    ZZZZ
+PQ TX    ZZZZZ
+PQ TX     Z
+PQ TX     ZZ
+PQ TX     ZZZ
+PQ TX     ZZZZ
+PQ TX     ZZZZZ
+PQ TX      Z
+PQ TX      ZZ
+PQ TX      ZZZ
+PQ TX      ZZZZ
+PQ TX      ZZZZZ
+PR TUV  Z
+PR TUV  ZZ
+PR TUV  ZZZ
+PR TUV  ZZZZ
+PR TUV  ZZZZZ
+PR TUV   Z
+PR TUV   ZZ
+PR TUV   ZZZ
+PR TUV   ZZZZ
+PR TUV   ZZZZZ
+PR TUV    Z
+PR TUV    ZZ
+PR TUV    ZZZ
+PR TUV    ZZZZ
+PR TUV    ZZZZZ
+PR TUV     Z
+PR TUV     ZZ
+PR TUV     ZZZ
+PR TUV     ZZZZ
+PR TUV     ZZZZZ
+PR TUV      Z
+PR TUV      ZZ
+PR TUV      ZZZ
+PR TUV      ZZZZ
+PR TUV      ZZZZZ
+PR TUV       Z
+PR TUV       ZZ
+PR TUV       ZZZ
+PR TUV       ZZZZ
+PR TUV       ZZZZZ
+PR TW  Z
+PR TW  ZZ
+PR TW  ZZZ
+PR TW  ZZZZ
+PR TW  ZZZZZ
+PR TW   Z
+PR TW   ZZ
+PR TW   ZZZ
+PR TW   ZZZZ
+PR TW   ZZZZZ
+PR TW    Z
+PR TW    ZZ
+PR TW    ZZZ
+PR TW    ZZZZ
+PR TW    ZZZZZ
+PR TW     Z
+PR TW     ZZ
+PR TW     ZZZ
+PR TW     ZZZZ
+PR TW     ZZZZZ
+PR TW      Z
+PR TW      ZZ
+PR TW      ZZZ
+PR TW      ZZZZ
+PR TW      ZZZZZ
+PR TW       Z
+PR TW       ZZ
+PR TW       ZZZ
+PR TW       ZZZZ
+PR TW       ZZZZZ
+PR TX Z
+PR TX ZZ
+PR TX ZZZ
+PR TX ZZZZ
+PR TX ZZZZZ
+PR TX  Z
+PR TX  ZZ
+PR TX  ZZZ
+PR TX  ZZZZ
+PR TX  ZZZZZ
+PR TX   Z
+PR TX   ZZ
+PR TX   ZZZ
+PR TX   ZZZZ
+PR TX   ZZZZZ
+PR TX    Z
+PR TX    ZZ
+PR TX    ZZZ
+PR TX    ZZZZ
+PR TX    ZZZZZ
+PR TX     Z
+PR TX     ZZ
+PR TX     ZZZ
+PR TX     ZZZZ
+PR TX     ZZZZZ
+PR TX      Z
+PR TX      ZZ
+PR TX      ZZZ
+PR TX      ZZZZ
+PR TX      ZZZZZ
+PSTUV  Z
+PSTUV  ZZ
+PSTUV  ZZZ
+PSTUV  ZZZZ
+PSTUV  ZZZZZ
+PSTUV   Z
+PSTUV   ZZ
+PSTUV   ZZZ
+PSTUV   ZZZZ
+PSTUV   ZZZZZ
+PSTUV    Z
+PSTUV    ZZ
+PSTUV    ZZZ
+PSTUV    ZZZZ
+PSTUV    ZZZZZ
+PSTUV     Z
+PSTUV     ZZ
+PSTUV     ZZZ
+PSTUV     ZZZZ
+PSTUV     ZZZZZ
+PSTUV      Z
+PSTUV      ZZ
+PSTUV      ZZZ
+PSTUV      ZZZZ
+PSTUV      ZZZZZ
+PSTUV       Z
+PSTUV       ZZ
+PSTUV       ZZZ
+PSTUV       ZZZZ
+PSTUV       ZZZZZ
+PSTW  Z
+PSTW  ZZ
+PSTW  ZZZ
+PSTW  ZZZZ
+PSTW  ZZZZZ
+PSTW   Z
+PSTW   ZZ
+PSTW   ZZZ
+PSTW   ZZZZ
+PSTW   ZZZZZ
+PSTW    Z
+PSTW    ZZ
+PSTW    ZZZ
+PSTW    ZZZZ
+PSTW    ZZZZZ
+PSTW     Z
+PSTW     ZZ
+PSTW     ZZZ
+PSTW     ZZZZ
+PSTW     ZZZZZ
+PSTW      Z
+PSTW      ZZ
+PSTW      ZZZ
+PSTW      ZZZZ
+PSTW      ZZZZZ
+PSTW       Z
+PSTW       ZZ
+PSTW       ZZZ
+PSTW       ZZZZ
+PSTW       ZZZZZ
+PSTX Z
+PSTX ZZ
+PSTX ZZZ
+PSTX ZZZZ
+PSTX ZZZZZ
+PSTX  Z
+PSTX  ZZ
+PSTX  ZZZ
+PSTX  ZZZZ
+PSTX  ZZZZZ
+PSTX   Z
+PSTX   ZZ
+PSTX   ZZZ
+PSTX   ZZZZ
+PSTX   ZZZZZ
+PSTX    Z
+PSTX    ZZ
+PSTX    ZZZ
+PSTX    ZZZZ
+PSTX    ZZZZZ
+PSTX     Z
+PSTX     ZZ
+PSTX     ZZZ
+PSTX     ZZZZ
+PSTX     ZZZZZ
+PSTX      Z
+PSTX      ZZ
+PSTX      ZZZ
+PSTX      ZZZZ
+PSTX      ZZZZZ
+Pattern: 1(0/1)*2(3/4)^5 36
+12(3/4)^5 36
+10/12(3/4)^5 36
+10/10/12(3/4)^5 36
+10/10/10/12(3/4)^5 36
+10/10/10/10/12(3/4)^5 36
+10/10/10/10/10/12(3/4)^5 36

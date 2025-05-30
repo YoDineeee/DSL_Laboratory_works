@@ -12,5 +12,5 @@ digraph FA {
     B -> S [label = "c"];
     B -> D [label = "a"];
     D -> D [label = "a"];
-    D -> Q_final;
+    D -> c;
 }
