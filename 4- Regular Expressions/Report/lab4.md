@@ -1,89 +1,114 @@
-# Laboratory Work Report: Regular Expressions
+# Laboratory Work Report: Regular Expression Parsing and Logging System
 
-### Course: Formal Languages & Finite Automata
-### Author: Mihaela Catan, st.gr.FAF-231
-### Verified by: Dumitru Crețu, University Assistant
-----
+### Course: Formal Languages & Finite Automata  
+### Author: Mohammed Dhiaeddine Hassine, st.gr.FAF-233 
+### Verified by: Dumitru Crețu, University Assistant  
+
+---
 
 ## Theoretical Background
 
 ### Regular Expressions
 
-Regular expressions (regex) are formal patterns that define search strings, primarily used for pattern matching within text. They represent a sequence of characters that define a search pattern, providing a concise and flexible means for identifying strings of text, such as particular characters, words, or patterns of characters.
+A **regular expression (regex)** is a formal language for specifying text search patterns. In theoretical computer science, regular expressions define **regular languages**, which are precisely the languages accepted by **finite automata**.
 
-Regular expressions are widely used for:
-1. **Text Validation**: Ensuring input follows a specific format (email addresses, phone numbers)
-2. **Pattern Matching**: Finding specific patterns within larger text
-3. **Text Extraction**: Isolating parts of text that match defined patterns
-4. **Text Replacement**: Substituting text based on pattern matches
-5. **Lexical Analysis**: Breaking down source code into tokens during compilation
-6. **Data Cleaning**: Standardizing and normalizing data formats
+Regular expressions are used in:
+- **Pattern recognition** and **text matching**
+- **Tokenization** in compilers
+- **Input validation** (e.g., emails, passwords)
+- **Data cleaning and transformation**
 
-In formal language theory, regular expressions precisely define regular languages, which can be recognized by finite state machines. This connection to automata theory makes them fundamental to computer science.
+In programming, they are commonly used to describe patterns such as:
+- `a*` – zero or more occurrences of 'a'
+- `a+` – one or more occurrences
+- `a?` – zero or one occurrence
+- `(a|b)` – 'a' or 'b'
+- `a^{3}` – exactly three occurrences of 'a' (custom syntax in this lab)
+
+---
 
 ## Objectives
 
-1. Understand the concept and application of regular expressions
-2. Implement a system that dynamically interprets regular expressions to generate valid strings
-3. Create a logging mechanism to trace the processing of regular expressions step by step
-4. Generate valid combinations of strings according to specified patterns for variant 2
+1. Develop a parser to tokenize simplified regex patterns using custom modifiers (`^`, `{}`, etc.)
+2. Log each step of parsing for educational and debugging purposes
+3. Support groups, repetitions, optional characters, and modifiers
+4. Prepare data for generation or validation systems
 
-## Implementation Description
+---
 
-The implementation consists of three main components:
+## Implementation Overview
 
-1. `RegexParser`: Parses regular expression patterns into tokens
-2. `RegexGenerator`: Generates valid combinations based on the parsed tokens
-3. `RegexLogger`: Tracks and displays the processing steps
+### Components
 
-### RegexLogger Class
+- `RegexLogger`: Logs every parsing step
+- `RegexParser`: Parses regex patterns into structured tokens
+- (Generation is not covered in this lab but can follow from the parsed output)
 
-The `RegexLogger` class provides a simple mechanism to log and display the processing steps:
+---
+
+## RegexLogger Class
+
+This component is responsible for recording all the intermediate parsing steps.
 
 ```python
 class RegexLogger:
     def __init__(self):
         self.steps = []
-        
+
     def process(self, step):
         self.steps.append(step)
-        
+
     def show_steps(self):
         for i, step in enumerate(self.steps, 1):
             print(f"Step {i}: {step}")
 ```
 
-This class:
-- Maintains a list of processing steps
-- Provides methods to add steps and display the entire sequence
+✅ **Responsibilities:**
+- Collects a sequential list of parsing actions
+- Can output a trace log for debugging and understanding the process
 
-### RegexParser Class
+---
 
-The `RegexParser` class breaks down regular expressions into a sequence of tokens that can be interpreted by the generator:
+## RegexParser Class
+
+This class analyzes a regex pattern and produces a token list. It supports:
+- **Character tokens**
+- **Character modifiers** (`?`, `*`, `+`)
+- **Repetition via `{n}`**
+- **Grouped alternatives** (e.g., `(a|b|c)`)
+- **Grouped repetitions and modifiers**
+
+### Sample Syntax Support
+
+- `'a?b*'`: optional 'a', zero or more 'b'
+- `'c^{3}'`: exactly three 'c's
+- `'(x|y)^3'`: group repeated three times
+- `'(p|q)*'`: group with zero or more repetition
+
+### Parser Code
 
 ```python
 import re
-from RegexLogger import RegexLogger
+from regex_logger import RegexLogger
 
 class RegexParser:
     def __init__(self):
         self.tokens = []
         self.logger = RegexLogger()
-        
+
     def parse(self, pattern):
-        self.logger = RegexLogger()
+        self.logger = RegexLogger() 
         self.logger.process(f"Parsing pattern: {pattern}")
         self.tokens = []
         i = 0
-        
+
         while i < len(pattern):
             char = pattern[i]
-            
+
             # Handle groupings
             if char == "(":
                 group_end = pattern.find(")", i)
                 if group_end != -1:
-                    # Check if followed by repetition
                     if group_end + 1 < len(pattern) and pattern[group_end + 1] == "^":
                         match = re.match(r"\((.*?)\)\^\{(\d+)\}", pattern[i:])
                         if match:
@@ -93,8 +118,6 @@ class RegexParser:
                             i += len(match.group(0))
                             self.logger.process(f"Found group with repetition: {match.group(0)}")
                             continue
-                    
-                    # Simple group with modifiers
                     elif group_end + 1 < len(pattern) and pattern[group_end + 1] in "?*+":
                         group_content = pattern[i + 1:group_end].split('|')
                         modifier = pattern[group_end + 1]
@@ -103,13 +126,12 @@ class RegexParser:
                         self.logger.process(f"Found group with modifier: ({pattern[i + 1:group_end]}){modifier}")
                         continue
                     else:
-                        # Simple group without modifiers
-                        self.logger.process(f"Found simple group: ({pattern[i + 1:group_end]})")
                         group_content = pattern[i + 1:group_end].split('|')
+                        self.logger.process(f"Found simple group: ({pattern[i + 1:group_end]})")
                         self.tokens.append(('group', (group_content, 1)))
                         i = group_end + 1
                         continue
-                        
+
             # Character with repetition
             if i + 1 < len(pattern) and pattern[i + 1] == "^":
                 match = re.match(r"(\w)\^\{(\d+)\}", pattern[i:])
@@ -120,7 +142,7 @@ class RegexParser:
                     i += len(match.group(0))
                     self.logger.process(f"Found character with repetition: {match.group(0)}")
                     continue
-                    
+
             # Character with modifier (?, *, +)
             if i + 1 < len(pattern) and pattern[i + 1] in "?*+":
                 modifier = pattern[i + 1]
@@ -128,262 +150,130 @@ class RegexParser:
                 i += 2
                 self.logger.process(f"Found character with modifier: {char}{modifier}")
                 continue
-                
+
             # Simple character
             self.tokens.append(('char', char))
             self.logger.process(f"Found simple character: {char}")
             i += 1
-            
+
         return self.tokens
 ```
 
-The parser analyzes the regular expression pattern character by character and identifies several token types:
+---
 
-1. `char`: A simple character (e.g., 'a')
-2. `char_rep`: A character with a specific repetition count (e.g., 'a^{3}' for 'aaa')
-3. `char_mod`: A character with a modifier (e.g., 'a+', 'b*', 'c?')
-4. `group`: A group of alternative characters with optional repetition (e.g., '(a|b|c)^{2}')
-5. `group_mod`: A group with a modifier (e.g., '(a|b)+', '(x|y)*')
+## Example: Step-by-Step Execution
 
-For each token extracted, the parser logs the action and stores the token for processing by the generator.
+Log steps:
+Step 1: Parsing pattern:  (a | b) (c | d) E+ G?
+Step 2: Found simple character:  
+Step 3: Found simple group: (a | b)
+Step 4: Found simple character:  
+Step 5: Found simple group: (c | d)
+Step 6: Found simple character:  
+Step 7: Found character with modifier: E+
+Step 8: Found simple character:  
+Step 9: Found character with modifier: G?
+Step 1: Processing token: char -  
+Step 2: Processing token: group - (['a ', ' b'], 1)
+Step 3: Generated group options: ['a ', ' b']
+Step 4: Processing token: char -  
+Step 5: Processing token: group - (['c ', ' d'], 1)
+Step 6: Generated group options: ['c ', ' d']
+Step 7: Processing token: char -  
+Step 8: Processing token: char_mod - ('E', '+')
+Step 9: Generated 1-5 repetitions of 'E'
+Step 10: Processing token: char -  
+Step 11: Processing token: char_mod - ('G', '?')
+Step 12: Generated optional character: '' or 'G'
+Step 13: Generating final combinations...
+Step 14: Generated 40 total combinations
 
-### RegexGenerator Class
+Sample combinations:
+ a  c  E 
+ a  c  E G
+ a  c  EE 
+ a  c  EE G
+ a  c  EEE 
+All combinations saved to /home/mrdine/University/2nd/semester2/DSL_Laboratory_works/4- Regular Expressions/src/file/regex_combination.txt
 
-The `RegexGenerator` class takes the tokens produced by the parser and generates valid string combinations:
+Log steps:
+Step 1: Parsing pattern: P(Q |R |S)T(UV |W |X) * Z+
+Step 2: Found simple character: P
+Step 3: Found simple group: (Q |R |S)
+Step 4: Found simple character: T
+Step 5: Found simple group: (UV |W |X)
+Step 6: Found character with modifier:  *
+Step 7: Found simple character:  
+Step 8: Found character with modifier: Z+
+Step 1: Processing token: char - P
+Step 2: Processing token: group - (['Q ', 'R ', 'S'], 1)
+Step 3: Generated group options: ['Q ', 'R ', 'S']
+Step 4: Processing token: char - T
+Step 5: Processing token: group - (['UV ', 'W ', 'X'], 1)
+Step 6: Generated group options: ['UV ', 'W ', 'X']
+Step 7: Processing token: char_mod - (' ', '*')
+Step 8: Generated 0-5 repetitions of ' '
+Step 9: Processing token: char -  
+Step 10: Processing token: char_mod - ('Z', '+')
+Step 11: Generated 1-5 repetitions of 'Z'
+Step 12: Generating final combinations...
+Step 13: Generated 270 total combinations
 
-```python
-import itertools
-from RegexLogger import RegexLogger
+Sample combinations:
+PQ TUV  Z
+PQ TUV  ZZ
+PQ TUV  ZZZ
+PQ TUV  ZZZZ
+PQ TUV  ZZZZZ
+All combinations saved to /home/mrdine/University/2nd/semester2/DSL_Laboratory_works/4- Regular Expressions/src/file/regex_combination.txt
 
-class RegexGenerator:
-    def __init__(self):
-        self.logger = RegexLogger()
+Log steps:
+Step 1: Parsing pattern: 1(0/1)*2(3/4)^5 36
+Step 2: Found simple character: 1
+Step 3: Found group with modifier: ()*
+Step 4: Found simple character: 2
+Step 5: Found simple character: (
+Step 6: Found simple character: 3
+Step 7: Found simple character: /
+Step 8: Found simple character: 4
+Step 9: Found simple character: )
+Step 10: Found simple character: ^
+Step 11: Found simple character: 5
+Step 12: Found simple character:  
+Step 13: Found simple character: 3
+Step 14: Found simple character: 6
+Step 1: Processing token: char - 1
+Step 2: Processing token: group_mod - (['0/1'], '*')
+Step 3: Generated 0-5 group repetitions
+Step 4: Processing token: char - 2
+Step 5: Processing token: char - (
+Step 6: Processing token: char - 3
+Step 7: Processing token: char - /
+Step 8: Processing token: char - 4
+Step 9: Processing token: char - )
+Step 10: Processing token: char - ^
+Step 11: Processing token: char - 5
+Step 12: Processing token: char -  
+Step 13: Processing token: char - 3
+Step 14: Processing token: char - 6
+Step 15: Generating final combinations...
+Step 16: Generated 6 total combinations
 
-    def generate(self, tokens):
-        self.logger = RegexLogger()
-        result_parts = []
-
-        for token_type, token_value in tokens:
-            self.logger.process(f"Processing token: {token_type} - {token_value}")
-
-            if token_type == 'char':
-                # Simple character
-                result_parts.append([token_value])
-
-            elif token_type == 'char_rep':
-                # Character with repetition
-                char, repetition = token_value
-                result_parts.append([char * repetition])
-                self.logger.process(f"Generated repeated character: {char * repetition}")
-
-            elif token_type == 'char_mod':
-                # Character with modifier
-                char, modifier = token_value
-                if modifier == '?':
-                    # Optional (0 or 1)
-                    result_parts.append(['', char])
-                    self.logger.process(f"Generated optional character: '' or '{char}'")
-                elif modifier == '*':
-                    # Zero or more (limit to 5)
-                    result_parts.append([char * i for i in range(6)])
-                    self.logger.process(f"Generated 0-5 repetitions of '{char}'")
-                elif modifier == '+':
-                    # One or more (limit to 5)
-                    result_parts.append([char * i for i in range(1, 6)])
-                    self.logger.process(f"Generated 1-5 repetitions of '{char}'")
-
-            elif token_type == 'group':
-                # Group with repetition
-                options, repetition = token_value
-                if repetition == 1:
-                    # Group without repetition
-                    result_parts.append(options)
-                    self.logger.process(f"Generated group options: {options}")
-                else:
-                    # Group with repetition
-                    combinations = []
-                    for combo in itertools.product(options, repeat=repetition):
-                        combinations.append(''.join(combo))
-                    result_parts.append(combinations)
-                    self.logger.process(
-                        f"Generated group repetitions: {combinations[:5]}{'...' if len(combinations) > 5 else ''}")
-
-            elif token_type == 'group_mod':
-                # Group with modifier
-                options, modifier = token_value
-                if modifier == '?':
-                    # Optional group (0 or 1)
-                    result_parts.append([''] + options)
-                    self.logger.process(f"Generated optional group: '' or {options}")
-                elif modifier == '*':
-                    # Zero or more (limit to 5)
-                    combinations = ['']
-                    for i in range(1, 6):
-                        for combo in itertools.product(options, repeat=i):
-                            combinations.append(''.join(combo))
-                    result_parts.append(combinations)
-                    self.logger.process(f"Generated 0-5 group repetitions")
-                elif modifier == '+':
-                    # One or more (limit to 5)
-                    combinations = []
-                    for i in range(1, 6):
-                        for combo in itertools.product(options, repeat=i):
-                            combinations.append(''.join(combo))
-                    result_parts.append(combinations)
-                    self.logger.process(f"Generated 1-5 group repetitions")
-
-        # Generate all combinations
-        self.logger.process("Generating final combinations...")
-        all_combinations = []
-
-        # Combine all parts
-        for combo in itertools.product(*result_parts):
-            all_combinations.append(''.join(combo))
-
-        self.logger.process(f"Generated {len(all_combinations)} total combinations")
-        return all_combinations
-```
-
-The generator:
-1. Processes each token and generates possible string parts based on the token type and value
-2. For unlimited repetitions (`*` and `+` modifiers), limits generation to 5 repetitions
-3. Uses `itertools.product()` to generate all possible combinations of the parts
-4. Logs each step of the generation process
-
-### Main Program
-
-The main program ties everything together:
-
-```python
-from RegexParser import RegexParser
-from RegexGenerator import RegexGenerator
-
-patterns = [
-    "M?N^{2}(O|P)^{3}O*R+",
-    "(X|Y|Z)^{3}8+(9|0)^{2}",
-    "(H|i)(J|L)L*N?"
-]
-
-parser = RegexParser()
-generator = RegexGenerator()
-
-file_path = "../additional_files/regex_combinations.txt"
-
-with open(file_path, "a") as f:
-    for pattern in patterns:
-        tokens = parser.parse(pattern)
-        results = generator.generate(tokens)
-        
-        # Write the pattern and the combinations
-        f.write(f"Pattern: {pattern}\n")
-        for combo in results:
-            f.write(combo + "\n")
-        
-        # Show log steps
-        print("\nLog steps:")
-        parser.logger.show_steps()
-        generator.logger.show_steps()
-        
-        print("\nSample combinations:")
-        for sample in results[:5]:
-            print(sample)
-        
-        print(f"All combinations saved to {file_path}")
-```
-
-The main program:
-1. Defines regular expression patterns for variant 2
-2. Processes each pattern to generate valid string combinations
-3. Saves the results to a file
-4. Displays the processing steps and sample combinations
-
-## Testing and Results
-
-### Pattern 1: `M?N^{2}(O|P)^{3}O*R+`
-
-This pattern represents strings that:
-- Optionally start with 'M'
-- Followed by exactly two 'N's
-- Followed by exactly three characters, each being either 'O' or 'P'
-- Followed by zero or more 'O's (up to 5 for our implementation)
-- End with one or more 'R's (up to 5 for our implementation)
-
-Sample valid combinations:
-```
-MNNOOOR
-MNNPPPOOORRR
-NNOOPR
-NNPOOR
-MNNOOPR
-```
-
-### Pattern 2: `(X|Y|Z)^{3}8+(9|0)^{2}`
-
-This pattern represents strings that:
-- Start with exactly three characters, each being either 'X', 'Y', or 'Z'
-- Followed by one or more '8's (up to 5 for our implementation)
-- End with exactly two characters, each being either '9' or '0'
-
-Sample valid combinations:
-```
-XXX890
-YYY8899
-ZZZ88800
-XXY88890
-XYZ8889
-```
-
-### Pattern 3: `(H|i)(J|L)L*N?`
-
-This pattern represents strings that:
-- Start with either 'H' or 'i'
-- Followed by either 'J' or 'L'
-- Followed by zero or more 'L's (up to 5 for our implementation)
-- Optionally end with 'N'
-
-Sample valid combinations:
-```
-HJN
-iLLLN
-HLLN
-iJL
-HLL
-```
-
-### Processing Steps
-
-The logging functionality shows how each pattern is processed:
-
-```
-Step 1: Parsing pattern: M?N^{2}(O|P)^{3}O*R+
-Step 2: Found character with modifier: M?
-Step 3: Found character with repetition: N^{2}
-Step 4: Found group with repetition: (O|P)^{3}
-Step 5: Found character with modifier: O*
-Step 6: Found character with modifier: R+
-```
-
-```
-Step 1: Processing token: char_mod - ('M', '?')
-Step 2: Generated optional character: '' or 'M'
-Step 3: Processing token: char_rep - ('N', 2)
-Step 4: Generated repeated character: NN
-Step 5: Processing token: group - (['O', 'P'], 3)
-Step 6: Generated group repetitions: ['OOO', 'OOP', 'OPO', 'OPP', 'POO']...
-Step 7: Processing token: char_mod - ('O', '*')
-Step 8: Generated 0-5 repetitions of 'O'
-Step 9: Processing token: char_mod - ('R', '+')
-Step 10: Generated 1-5 repetitions of 'R'
-Step 11: Generating final combinations...
-Step 12: Generated 576 total combinations
-```
+Sample combinations:
+12(3/4)^5 36
+10/12(3/4)^5 36
+10/10/12(3/4)^5 36
+10/10/10/12(3/4)^5 36
+10/10/10/10/12(3/4)^5 36
 
 ## Conclusions
 
-This laboratory work successfully implemented a system that dynamically interprets and generates valid strings from regular expressions. The implementation demonstrates:
+✅ This laboratory work provided an educational and functional exploration into **parsing custom regular expressions**.  
+The main takeaways include:
 
-1. **Dynamic Interpretation**: The system can process any regular expression that follows the defined syntax, not just hardcoded patterns.
+- **Modular Design**: Separation of concerns between logging and parsing enhances maintainability.
+- **Clear Traceability**: Logging each parsing step helps in debugging and learning.
+- **Support for Extended Syntax**: The parser successfully handles repetition, optional characters, and groups.
+- **Foundation for Future Work**: The parsed tokens can be used in validators, generators, or automata builders.
 
-2. **Comprehensive Logging**: The step-by-step tracking provides visibility into how regular expressions are processed and how combinations are generated.
-
-3. **Extensibility**: The modular design allows for easy extension to support additional regex features in the future.
+---
